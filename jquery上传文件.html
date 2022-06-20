@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./bootstrap-3.4.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <script src="./js/jquery.min.js"></script>
+</head>
+
+<body>
+    <input type="file" name="" id="file1">
+    <button id="btnUpload">上传</button>
+    <img src="./img/R-C.gif" alt="" id="img" style="width: 200px; display: none;" >
+    <script>
+        $(function () {
+            // 自jQuery版本1.8 起，该方法只能被附加到文档（document）
+            $(document).ajaxStart(function () {
+                $('#img').show() // 监听当前文档所有Ajax请求
+            })
+
+            $(document).ajaxStop(function () {
+                $('#img').hide() // 监听当前文档所有Ajax请求
+            })
+
+            // 1、验证是否上传文件
+            $('#btnUpload').on('click', function () {
+                var files = $('#file1')[0].files
+                if (files.length <= 0) {
+                    return alert('请选择图片后再上传！')
+                }
+                console.log('已指定上传文件！');
+
+                // 2、追加文件
+                var fd = new FormData()
+                fd.append('avatar', files[0])
+
+                // 3、上传文件
+                $.ajax({
+                    method: 'POST',
+                    url: 'http://www.liulongbin.top:3006/api/upload/avatar',
+                    data: fd,
+                    contentType: false, // 不修改contentType格式，使用FormData的默认Content-Type值
+                    processData: false, // 不对FormData中的数据进行url编码
+                    success: function (res) {
+                        console.log(res);
+                        $('#img').attr('src', 'http://www.liulongbin.top:3006' + res.url)
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+
+</html>

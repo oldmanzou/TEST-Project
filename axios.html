@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/axios.min.js"></script>
+</head>
+
+<body>
+    <button id="btn1">GET请求</button>
+
+    <script>
+        // document.querySelector('#btn1').addEventListener('click', function () {
+        //     var url = 'http://www.liulongbin.top:3006/api/post'
+        //     var paramObj = { name: 'zs', age: 20 }
+
+        //     axios.post(url, { param: paramObj }).then(function (res) {
+        //         var result = res.data
+        //         console.log(res);
+        //     })
+        // })
+
+        document.querySelector('#btn1').addEventListener('click', function () {
+            var url = 'http://www.liulongbin.top:3006/api/post'
+            var paramObj = { name: 'zs', age: 20 }
+            axios({
+                method: 'POST',
+                url: url,
+                data: paramObj
+            }).then(function (res) {
+                console.log(res);
+            })
+        })
+    </script>
+</body>
+
+</html>
