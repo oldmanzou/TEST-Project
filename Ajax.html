@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./bootstrap-3.4.1-dist/css/bootstrap.css">
+    <!-- <script src="./bootstrap-3.4.1-dist/js/jquery.min.js"></script> -->
+    <!-- <script src="./bootstrap-3.4.1-dist/js/bootstrap.js"></script> -->
+    <script src="./js/jquery.min.js"></script>
+</head>
+
+<body>
+    <form action="" id="form1">
+        <input type="file" name="" id="file1">
+        <button id="btnUpload">上传文件</button>
+        <br />
+        <img src="" alt="" id="img" width="800" />
+    </form>
+
+    <div class="progress" style="width: 500px; margin:15px 10px;">
+        <div class="progress-bar progress-bar-striped active" style="width:" id="percent">
+            
+        </div>
+    </div>
+    <script>
+        //一、验证是否选择了文件
+        var btnUpload = document.querySelector('#btnUpload')
+        btnUpload.addEventListener('click', function (e) {
+            e.preventDefault()
+            // files是文件上传的数组
+            var files = document.querySelector('#file1').files
+            if (files.length <= 0) {
+                return alert('请选择要上传的文件！')
+            }
+            console.log('用户已选择上传的文件');
+
+            //二、上传文件
+            var fd = new FormData()
+            fd.append('avatar', files[0])
+
+            var xhr = new XMLHttpRequest()
+
+
+
+            xhr.open('POST', 'http://www.liulongbin.top:3006/api/upload/avatar')
+            xhr.upload.onprogress = function (e) {
+                // e.lengthComputable 是一个布尔值，表示当前上传资源是否具有可计算的长度
+                if (e.lengthComputable) {
+                    // e.loaded 已传输的字节
+                    // e.total 需传输的字节
+                    var percentComplete = Math.ceil((e.loaded / e.total) * 100)
+                    // console.log(percentComplete);
+                    $('#percent')
+                        .attr('style', 'width:' + percentComplete + '%')
+                        .html(percentComplete + '%')
+                }
+            }
+
+            xhr.upload.onload = function() {
+                $('#percent')
+                .removeClass()
+                .addClass('progress-bar progress-bar-success')
+            }
+            xhr.send(fd)
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText)
+                    if (data.status === 200) {
+                        var str = document.querySelector('#img').src = 'http://www.liulongbin.top:3006' + data.url
+                    } else {
+                        console.log(data.message);
+                    }
+                }
+            }
+
+
+        })
+
+
+    </script>
+</body>
+
+</html>
